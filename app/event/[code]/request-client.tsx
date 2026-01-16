@@ -75,10 +75,11 @@ export default function RequestClient({ code }: { code: string }) {
   </div>
 
   {/* Badge */}
-  <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-zinc-200">
-    <span className="opacity-80">🎧</span>
-    <span className="font-semibold tracking-wide">DJ Requests</span>
-  </div>
+  <h2 className="mt-2 text-2xl font-extrabold tracking-tight">
+  <span className="bg-gradient-to-r from-emerald-400 to-pink-400 bg-clip-text text-transparent">
+    DJ Requests
+  </span>
+</h2>
 
   <h1 className="mt-4 text-4xl font-extrabold tracking-tight">
     Invia una canzone
