@@ -147,6 +147,57 @@ export default function RequestClient({ code }: { code: string }) {
     <div className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-950 to-zinc-900 text-zinc-100">
       <div className="mx-auto max-w-2xl px-4 py-8">
         <header className="mb-8 text-center">
+          <div className="mx-auto mb-3 flex h-20 w-20 items-center justify-center">
+  <svg viewBox="0 0 64 64" className="h-20 w-20">
+    <defs>
+      <linearGradient id="mvGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stopColor="#34d399" />
+        <stop offset="100%" stopColor="#fb7185" />
+      </linearGradient>
+    </defs>
+
+    {/* arco cuffie */}
+    <path
+      d="M12 34c0-12 8-22 20-22s20 10 20 22"
+      fill="none"
+      stroke="url(#mvGrad)"
+      strokeWidth="5"
+      strokeLinecap="round"
+    />
+
+    {/* pad sinistra */}
+    <rect x="6" y="32" width="10" height="20" rx="4" fill="url(#mvGrad)" />
+    {/* pad destra */}
+    <rect x="48" y="32" width="10" height="20" rx="4" fill="url(#mvGrad)" />
+
+    {/* M */}
+    <text
+      x="32"
+      y="42"
+      textAnchor="middle"
+      fontSize="26"
+      fontWeight="900"
+      fontFamily="Arial, sans-serif"
+      fill="#34d399"
+    >
+      M
+    </text>
+
+    {/* V sovrapposta */}
+    <text
+      x="34"
+      y="46"
+      textAnchor="middle"
+      fontSize="26"
+      fontWeight="900"
+      fontFamily="Arial, sans-serif"
+      fill="#fb7185"
+    >
+      V
+    </text>
+  </svg>
+</div>
+
           <h2 className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-pink-400">
             DJ Requests
           </h2>
