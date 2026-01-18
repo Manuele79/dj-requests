@@ -1,6 +1,38 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
+// --- SIMPLE IN-MEMORY RATE LIMIT (good as first shield on Vercel) ---
+const _rl = (globalThis as any).__dj_rl || new Map<string, number>();
+(globalThis as any).__dj_rl = _rl;
+
+function getClientIp(req: Request) {
+  // Vercel/Proxies
+  const xff = req.headers.get("x-forwarded-for") || "";
+  const ip = xff.split(",")[0]?.trim();
+  return ip || "unknown";
+}
+
+function rateLimitOr429(key: string, windowMs: number) {
+  const now = Date.now();
+  const last = _rl.get(key) || 0;
+  if (now - last < windowMs) {
+    const retryAfterSec = Math.ceil((windowMs - (now - last)) / 1000);
+    return NextResponse.json(
+      { ok: false, error: "Too Many Requests", retryAfterSec },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": String(retryAfterSec),
+          "Cache-Control": "no-store",
+        },
+      }
+    );
+  }
+  _rl.set(key, now);
+  return null;
+}
+
+
 function env(name: string) {
   const v = process.env[name];
   if (!v) throw new Error(`Missing env: ${name}`);
@@ -112,6 +144,10 @@ export async function POST(req: Request) {
   const eventCode = normalizeEventCode(body.eventCode);
   const title = String(body.title || "").trim();
   const url = String(body.url || body.youtubeUrl || "").trim();
+  const ip = getClientIp(req);
+  const denied = rateLimitOr429(`post:${ip}:${eventCode}`, 5000);
+  if (denied) return denied;
+
 
   if (!eventCode || (!title && !url)) {
     return NextResponse.json({ ok: false, error: "Bad Request" }, { status: 400 });
@@ -183,6 +219,10 @@ export async function PATCH(req: Request) {
   const body = await req.json().catch(() => ({} as any));
   const id = String(body.id || "").trim();
   const delta = Number(body.delta ?? 1);
+  const ip = getClientIp(req);
+  const denied2 = rateLimitOr429(`patch:${ip}:${id}`, 2000);
+  if (denied2) return denied2;
+
 
   if (!id) return NextResponse.json({ ok: false }, { status: 400 });
 
