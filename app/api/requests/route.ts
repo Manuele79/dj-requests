@@ -145,7 +145,7 @@ export async function POST(req: Request) {
   const title = String(body.title || "").trim();
   const url = String(body.url || body.youtubeUrl || "").trim();
   const ip = getClientIp(req);
-  const denied = rateLimitOr429(`post:${ip}:${eventCode}`, 5000);
+  const denied = rateLimitOr429(`post:${ip}:${eventCode}`, 10000);
   if (denied) return denied;
 
 
