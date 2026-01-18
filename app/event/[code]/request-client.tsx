@@ -101,20 +101,32 @@ export default function RequestClient({ code }: { code: string }) {
 
     setLoading(true);
     setHint("");
+
     try {
       let finalTitle = t || "Richiesta";
 
-      if (url && looksLikeYouTube(url)) {
+      async function tryOembed(endpoint: string) {
         try {
-          const res = await fetch(
+          const res = await fetch(endpoint);
+          if (!res.ok) return null;
+          const data = await res.json();
+          return data?.title ? String(data.title) : null;
+        } catch {
+          return null;
+        }
+      }
+
+      if (url) {
+        if (looksLikeYouTube(url)) {
+          const titleFrom = await tryOembed(
             `https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`
           );
-          if (res.ok) {
-            const data = await res.json();
-            if (data?.title) finalTitle = data.title;
-          }
-        } catch {
-          // ignore
+          if (titleFrom) finalTitle = titleFrom;
+        } else if (url.toLowerCase().includes("spotify.com")) {
+          const titleFrom = await tryOembed(
+            `https://open.spotify.com/oembed?url=${encodeURIComponent(url)}`
+          );
+          if (titleFrom) finalTitle = titleFrom;
         }
       }
 
@@ -142,6 +154,7 @@ export default function RequestClient({ code }: { code: string }) {
       setLoading(false);
     }
   }
+
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-950 to-zinc-900 text-zinc-100">
