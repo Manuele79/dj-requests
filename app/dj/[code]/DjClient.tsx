@@ -140,11 +140,27 @@ export default function DjClient({ code }: { code: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [code]);
 
-  function createEvent() {
-    const safe = eventName.trim().toUpperCase().replace(/\s+/g, "-");
-    if (!safe) return;
-    window.location.href = `/dj/${safe}`;
+  async function createEvent() {
+  const safe = eventName.trim().toUpperCase().replace(/\s+/g, "-");
+  if (!safe) return;
+
+  const password = prompt("Password per creare evento:");
+  if (!password) return;
+
+  const res = await fetch("/api/events", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ eventCode: safe, password }),
+  });
+
+  if (!res.ok) {
+    alert("Password errata o errore creazione evento");
+    return;
   }
+
+  window.location.href = `/dj/${safe}`;
+}
+
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-950 to-zinc-900 text-zinc-100">
