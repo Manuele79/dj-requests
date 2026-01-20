@@ -227,7 +227,14 @@ export async function POST(req: Request) {
 
   const platform = detectPlatform(url);
   const youtubeVideoId = platform === "youtube" ? extractYouTubeVideoId(url) : "";
-  const safeTitle = await resolveTitleServer(title, url, platform);
+  const isPlaylist =
+  (platform === "youtube" && url.includes("list=")) ||
+  (platform === "spotify" && url.toLowerCase().includes("/playlist/"));
+
+const safeTitle = isPlaylist
+  ? (title || (platform === "youtube" ? "Playlist YouTube" : "Playlist Spotify"))
+  : await resolveTitleServer(title, url, platform);
+
   const nowMs = Date.now();
 
   // MERGE: se stesso brano (youtubeVideoId) nello stesso evento -> +1 voto
