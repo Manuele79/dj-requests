@@ -49,9 +49,30 @@ function normalizeVideoId(x: any) {
   return String(x || "").trim();
 }
 
+function isYouTubePlaylistUrl(urlStr: string) {
+  const u = (urlStr || "").toLowerCase();
+  return u.includes("youtube.com") && u.includes("list=");
+}
+
+function extractYouTubeListId(urlStr: string): string {
+  try {
+    const u = new URL(urlStr);
+    return u.searchParams.get("list") || "";
+  } catch {
+    return "";
+  }
+}
+
+type PlayKind = "video" | "playlist";
+type PlayableItem = RequestItem & {
+  _kind: PlayKind;
+  _key: string; // unique key per confronto/advance
+  _listId?: string;
+};
+
 export default function PartyClient({ code }: { code: string }) {
   const [items, setItems] = useState<RequestItem[]>([]);
-  const [currentVideoId, setCurrentVideoId] = useState<string>("");
+  const [currentKey, setCurrentKey] = useState<string>(""); // videoId o list:<id>
   const [currentTitle, setCurrentTitle] = useState<string>("");
   const [loopEnabled, setLoopEnabled] = useState(true);
   const [userStarted, setUserStarted] = useState(false);
@@ -63,14 +84,14 @@ export default function PartyClient({ code }: { code: string }) {
   );
 
   // refs per evitare closure "vecchie" dentro gli handler YouTube
-  const playableRef = useRef<RequestItem[]>([]);
-  const currentIdRef = useRef<string>("");
+  const playableRef = useRef<PlayableItem[]>([]);
+  const currentKeyRef = useRef<string>("");
   const loopRef = useRef<boolean>(true);
   const advancingRef = useRef<boolean>(false);
 
   useEffect(() => {
-    currentIdRef.current = currentVideoId;
-  }, [currentVideoId]);
+    currentKeyRef.current = currentKey;
+  }, [currentKey]);
 
   useEffect(() => {
     loopRef.current = loopEnabled;
@@ -106,38 +127,88 @@ export default function PartyClient({ code }: { code: string }) {
     }
   }
 
-  const playable = useMemo(() => {
-    return (items || [])
-      .filter((r) => r.platform === "youtube" && r.youtubeVideoId)
+  const playable = useMemo<PlayableItem[]>(() => {
+    const base = (items || [])
+      .filter((r) => r.platform === "youtube" && (r.youtubeVideoId || isYouTubePlaylistUrl(r.url)))
+      .map((r) => {
+        const isPl = isYouTubePlaylistUrl(r.url) && !r.youtubeVideoId;
+        if (isPl) {
+          const listId = extractYouTubeListId(r.url);
+          return {
+            ...r,
+            _kind: "playlist" as const,
+            _key: `list:${listId || r.id}`, // se listId manca, fallback
+            _listId: listId || "",
+          };
+        }
+        return {
+          ...r,
+          _kind: "video" as const,
+          _key: r.youtubeVideoId,
+        };
+      })
+      .filter((x) => {
+        // playlist senza listId: comunque la mostriamo ma non sarà riproducibile; ok.
+        if (x._kind === "video") return !!x.youtubeVideoId;
+        return true;
+      })
       .sort((a, b) => b.votes - a.votes || b.updatedAt - a.updatedAt);
+
+    return base;
   }, [items]);
+
   const spotifyList = useMemo(() => {
     return (items || [])
       .filter((r) => r.platform === "spotify" && r.url)
       .sort((a, b) => b.votes - a.votes || b.updatedAt - a.updatedAt);
   }, [items]);
 
-
-
-
   useEffect(() => {
     playableRef.current = playable;
   }, [playable]);
 
-  function pickTitle(videoId: string) {
-    const found = playableRef.current.find((p) => p.youtubeVideoId === videoId);
-    setCurrentTitle(found?.title || "");
+  function findPlayableByKey(key: string) {
+    return playableRef.current.find((p) => p._key === key);
   }
 
-  function playVideo(videoId: string, reason?: string) {
-    const id = normalizeVideoId(videoId);
+  function setNowPlayingFromItem(item: PlayableItem) {
+    setCurrentKey(item._key);
+    setCurrentTitle(item.title || (item._kind === "playlist" ? "Playlist YouTube" : ""));
+  }
+
+  function playItem(item: PlayableItem, reason?: string) {
+    const p = playerRef.current;
+    if (!item) return;
+
+    // Playlist
+    if (item._kind === "playlist") {
+      const listId = item._listId || extractYouTubeListId(item.url);
+      if (!listId) {
+        setStatusMsg("⚠️ Playlist non riproducibile (listId mancante)");
+        return;
+      }
+
+      setStatusMsg(reason ? `▶️ Playlist (${reason})` : `▶️ Playlist`);
+      setNowPlayingFromItem({ ...item, _key: `list:${listId}`, _listId: listId });
+
+      // se player esiste già → loadPlaylist
+      if (p?.loadPlaylist) {
+        try {
+          if (!userStarted && p.mute) p.mute();
+          p.loadPlaylist({ listType: "playlist", list: listId, index: 0 });
+          p.playVideo?.();
+        } catch {}
+      }
+      return;
+    }
+
+    // Video singolo
+    const id = normalizeVideoId(item.youtubeVideoId);
     if (!id) return;
 
     setStatusMsg(reason ? `▶️ Play: ${id} (${reason})` : `▶️ Play: ${id}`);
-    setCurrentVideoId(id);
-    pickTitle(id);
+    setNowPlayingFromItem(item);
 
-    const p = playerRef.current;
     if (p?.loadVideoById) {
       try {
         if (!userStarted && p.mute) p.mute();
@@ -152,30 +223,30 @@ export default function PartyClient({ code }: { code: string }) {
     advancingRef.current = true;
 
     const list = playableRef.current;
-    const cur = currentIdRef.current;
+    const curKey = currentKeyRef.current;
 
     if (!list.length) {
       advancingRef.current = false;
       return;
     }
 
-    const idx = list.findIndex((p) => p.youtubeVideoId === cur);
+    const idx = list.findIndex((p) => p._key === curKey);
 
     if (idx < 0) {
-      playVideo(list[0].youtubeVideoId, `advance idx=-1 (${reason})`);
+      playItem(list[0], `advance idx=-1 (${reason})`);
       setTimeout(() => (advancingRef.current = false), 350);
       return;
     }
 
     const next = list[idx + 1];
     if (next) {
-      playVideo(next.youtubeVideoId, `next (${reason})`);
+      playItem(next, `next (${reason})`);
       setTimeout(() => (advancingRef.current = false), 350);
       return;
     }
 
     if (loopRef.current) {
-      playVideo(list[0].youtubeVideoId, `loop (${reason})`);
+      playItem(list[0], `loop (${reason})`);
       setTimeout(() => (advancingRef.current = false), 350);
       return;
     }
@@ -201,35 +272,39 @@ export default function PartyClient({ code }: { code: string }) {
   useEffect(() => {
     if (!playable.length) return;
 
-    if (!currentVideoId) {
-      setCurrentVideoId(playable[0].youtubeVideoId);
-      setCurrentTitle(playable[0].title);
+    if (!currentKey) {
+      // setta il primo e poi verrà caricato dal player init
+      setNowPlayingFromItem(playable[0]);
       return;
     }
 
-    const stillThere = playable.some((p) => p.youtubeVideoId === currentVideoId);
+    const stillThere = playable.some((p) => p._key === currentKey);
     if (!stillThere) {
-      setCurrentVideoId(playable[0].youtubeVideoId);
-      setCurrentTitle(playable[0].title);
+      setNowPlayingFromItem(playable[0]);
     }
-  }, [playable, currentVideoId]);
+  }, [playable, currentKey]);
 
-  // init player
+  // init player / load current selection
   useEffect(() => {
     let cancelled = false;
 
     async function init() {
-      if (!currentVideoId) return;
+      if (!currentKey) return;
 
       await loadYouTubeIframeAPI();
       if (cancelled) return;
 
       const origin = window.location.origin;
+      const current = findPlayableByKey(currentKey);
 
       // crea il player una volta sola
       if (!playerRef.current) {
+        // se è playlist, passa listType/list nei playerVars
+        const isPl = current?._kind === "playlist";
+        const listId = isPl ? (current?._listId || extractYouTubeListId(current?.url || "")) : "";
+
         playerRef.current = new window.YT.Player(playerContainerId.current, {
-          videoId: currentVideoId,
+          videoId: !isPl ? (current?.youtubeVideoId || "") : "",
           playerVars: {
             autoplay: 1,
             playsinline: 1,
@@ -237,6 +312,9 @@ export default function PartyClient({ code }: { code: string }) {
             modestbranding: 1,
             controls: 1,
             origin,
+            ...(isPl && listId
+              ? { listType: "playlist", list: listId }
+              : {}),
           },
           events: {
             onReady: (e: any) => {
@@ -244,23 +322,38 @@ export default function PartyClient({ code }: { code: string }) {
                 if (!userStarted && e.target.mute) e.target.mute();
                 e.target.playVideo();
               } catch {}
-              pickTitle(currentVideoId);
+              // titolo
+              if (current) setCurrentTitle(current.title || (current._kind === "playlist" ? "Playlist YouTube" : ""));
             },
             onStateChange: (e: any) => {
               // 0 = ended
               if (e.data === 0) {
-                // IMPORTANTISSIMO: sblocca prima, altrimenti il prossimo advance può essere ignorato
+                // Se stiamo riproducendo una playlist, NON avanzare ad ogni brano.
+                // Avanziamo SOLO quando finisce tutta la playlist.
+                const cur = findPlayableByKey(currentKeyRef.current);
+                const p = playerRef.current;
+
+                if (cur?._kind === "playlist" && p?.getPlaylist && p?.getPlaylistIndex) {
+                  try {
+                    const pl = p.getPlaylist?.() || [];
+                    const idx = p.getPlaylistIndex?.() ?? -1;
+                    const hasMoreInside = Array.isArray(pl) && idx >= 0 && idx < pl.length - 1;
+
+                    // Se c'è ancora roba dentro la playlist, lasciamo fare a YouTube.
+                    if (hasMoreInside) return;
+                  } catch {
+                    // se non riusciamo a leggere playlist, facciamo fallback: non advance immediato
+                    return;
+                  }
+                }
+
                 advancingRef.current = false;
                 advance("ended");
               }
             },
             onError: (e: any) => {
-              // error codes comuni: 2, 5, 100, 101, 150
               setStatusMsg(`⚠️ YouTube error ${e?.data} → skip`);
-
-              // IMPORTANTISSIMO: sblocca subito, altrimenti advance() viene ignorato
               advancingRef.current = false;
-
               setTimeout(() => advance(`error-${e?.data}`), 200);
             },
           },
@@ -269,15 +362,30 @@ export default function PartyClient({ code }: { code: string }) {
         return;
       }
 
-      // se il player esiste già, carica il nuovo id
+      // se il player esiste già, carica il current selection
+      const p = playerRef.current;
+
       try {
-        const p = playerRef.current;
         if (!userStarted && p.mute) p.mute();
-        p.loadVideoById(currentVideoId);
-        p.playVideo?.();
+
+        if (current?._kind === "playlist") {
+          const listId = current._listId || extractYouTubeListId(current.url);
+          if (listId && p.loadPlaylist) {
+            p.loadPlaylist({ listType: "playlist", list: listId, index: 0 });
+            p.playVideo?.();
+          }
+        } else {
+          const vid = current?.youtubeVideoId || "";
+          if (vid && p.loadVideoById) {
+            p.loadVideoById(vid);
+            p.playVideo?.();
+          }
+        }
       } catch {}
 
-      pickTitle(currentVideoId);
+      if (current) {
+        setCurrentTitle(current.title || (current._kind === "playlist" ? "Playlist YouTube" : ""));
+      }
     }
 
     init();
@@ -285,11 +393,14 @@ export default function PartyClient({ code }: { code: string }) {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentVideoId]);
+  }, [currentKey]);
 
-  // fallback timer: quando mancano < 0.7s, vai avanti
+  // fallback timer: per i VIDEO singoli ok, per PLAYLIST no (altrimenti skippa)
   useEffect(() => {
     const t = setInterval(() => {
+      const cur = findPlayableByKey(currentKeyRef.current);
+      if (cur?._kind === "playlist") return;
+
       const p = playerRef.current;
       if (!p || !p.getDuration || !p.getCurrentTime || !p.getPlayerState) return;
 
@@ -298,9 +409,9 @@ export default function PartyClient({ code }: { code: string }) {
         if (state !== 1) return;
 
         const dur = p.getDuration();
-        const cur = p.getCurrentTime();
+        const curT = p.getCurrentTime();
 
-        if (dur > 0 && cur > 0 && dur - cur < 0.7) {
+        if (dur > 0 && curT > 0 && dur - curT < 0.7) {
           advancingRef.current = false;
           advance("timer");
         }
@@ -308,6 +419,7 @@ export default function PartyClient({ code }: { code: string }) {
     }, 500);
 
     return () => clearInterval(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function handleUserStart() {
@@ -361,7 +473,7 @@ export default function PartyClient({ code }: { code: string }) {
         <section className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4">
           {playable.length === 0 ? (
             <p className="text-sm text-zinc-400">
-              Nessun video YouTube in coda. Servono link YouTube.
+              Nessun YouTube in coda. Servono link YouTube (video o playlist).
             </p>
           ) : (
             <>
@@ -415,20 +527,19 @@ export default function PartyClient({ code }: { code: string }) {
               <li
                 key={r.id}
                 className={`rounded-xl border border-zinc-800 px-3 py-2 text-sm ${
-                  r.youtubeVideoId === currentVideoId
-                    ? "bg-zinc-800/60"
-                    : "bg-zinc-950/50"
+                  r._key === currentKey ? "bg-zinc-800/60" : "bg-zinc-950/50"
                 }`}
               >
                 <div className="flex items-start justify-between gap-3">
                   <button
                     onClick={() => {
                       advancingRef.current = false;
-                      playVideo(r.youtubeVideoId, "manual pick");
+                      playItem(r, "manual pick");
                     }}
                     className="text-left font-semibold text-zinc-100 hover:underline"
                   >
-                    {r.title}
+                    {r.title || (r._kind === "playlist" ? "Playlist YouTube" : "—")}
+                    {r._kind === "playlist" ? "  📃" : ""}
                   </button>
 
                   <span className="shrink-0 rounded-full bg-zinc-800 px-3 py-1 text-xs font-semibold text-zinc-200">
@@ -439,51 +550,49 @@ export default function PartyClient({ code }: { code: string }) {
             ))}
           </ul>
         </section>
+
         {/* --- SPOTIFY QUEUE (solo lista + link) --- */}
-<section className="mt-6 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4">
-  <div className="mb-3 flex items-center justify-between">
-    <h2 className="text-sm font-semibold text-zinc-100">Coda Spotify</h2>
-    <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">
-      {spotifyList.length}
-    </span>
-  </div>
-
-  {spotifyList.length === 0 ? (
-    <p className="text-sm text-zinc-400">Nessun brano Spotify inviato.</p>
-  ) : (
-    <ul className="space-y-2">
-      {spotifyList.map((r) => (
-        <li
-          key={r.id}
-          className="rounded-xl border border-zinc-800 bg-zinc-950/50 px-3 py-2 text-sm"
-        >
-          <div className="flex items-center justify-between gap-3">
-            <div className="min-w-0">
-              <div className="truncate font-semibold text-zinc-100">
-                {r.title}
-              </div>
-              <div className="mt-0.5 truncate text-xs text-zinc-500">
-                🔥 {r.votes}
-              </div>
-            </div>
-
-            <a
-              href={r.url}
-              target="_blank"
-              rel="noreferrer"
-              className="shrink-0 rounded-xl bg-green-600 px-3 py-2 text-xs font-semibold text-white hover:opacity-90"
-            >
-              🎵 Apri
-            </a>
+        <section className="mt-6 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4">
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="text-sm font-semibold text-zinc-100">Coda Spotify</h2>
+            <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">
+              {spotifyList.length}
+            </span>
           </div>
-        </li>
-      ))}
-    </ul>
-  )}
-</section>
 
+          {spotifyList.length === 0 ? (
+            <p className="text-sm text-zinc-400">Nessun brano Spotify inviato.</p>
+          ) : (
+            <ul className="space-y-2">
+              {spotifyList.map((r) => (
+                <li
+                  key={r.id}
+                  className="rounded-xl border border-zinc-800 bg-zinc-950/50 px-3 py-2 text-sm"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <div className="truncate font-semibold text-zinc-100">
+                        {r.title}
+                      </div>
+                      <div className="mt-0.5 truncate text-xs text-zinc-500">
+                        🔥 {r.votes}
+                      </div>
+                    </div>
 
-    
+                    <a
+                      href={r.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="shrink-0 rounded-xl bg-green-600 px-3 py-2 text-xs font-semibold text-white hover:opacity-90"
+                    >
+                      🎵 Apri
+                    </a>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
       </div>
     </div>
   );
