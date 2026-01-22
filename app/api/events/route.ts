@@ -31,6 +31,33 @@ async function checkCreatePassword(provided: any) {
   return pass === String(data.value);
 }
 
+// GET /api/events?eventCode=XXXX  (serve per "entra evento esistente")
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const eventCode = normalizeEventCode(searchParams.get("eventCode"));
+
+  if (!eventCode) {
+    return NextResponse.json({ ok: false, error: "Bad Request" }, { status: 400 });
+  }
+
+  const { data: ev, error } = await supabase
+    .from("events")
+    .select("event_code, expires_at")
+    .eq("event_code", eventCode)
+    .single();
+
+  if (error || !ev) {
+    return NextResponse.json({ ok: false, error: "Not found" }, { status: 404 });
+  }
+
+  const exp = ev.expires_at ? Date.parse(ev.expires_at) : 0;
+  if (exp && Date.now() > exp) {
+    return NextResponse.json({ ok: false, error: "Expired" }, { status: 410 });
+  }
+
+  return NextResponse.json({ ok: true, eventCode: ev.event_code, expiresAt: ev.expires_at });
+}
+
 // POST /api/events  body: { eventCode, password }
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({} as any));
