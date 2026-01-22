@@ -159,6 +159,7 @@ function mapRow(r: any) {
     id: String(r.id),
     eventCode: String(r.event_code ?? ""),
     title: String(r.title ?? ""),
+    dedication: String(r.dedication ?? ""),
     url: String(r.url ?? ""),
     platform: String(r.platform ?? "other"),
     youtubeVideoId: String(r.youtube_video_id ?? ""),
@@ -200,6 +201,8 @@ export async function POST(req: Request) {
   const eventCode = normalizeEventCode(body.eventCode);
   const title = String(body.title || "").trim();
   const url = String(body.url || body.youtubeUrl || "").trim();
+  const dedication = String(body.dedication || "").trim().slice(0, 180);
+
 
   const ip = getClientIp(req);
   const denied = rateLimitOr429(`post:${ip}:${eventCode}`, 10000);
@@ -273,6 +276,8 @@ const safeTitle = isPlaylist
       event_code: eventCode,
       title: safeTitle,
       url,
+      dedication,
+
       platform,
       youtube_video_id: youtubeVideoId,
       votes: 1,
