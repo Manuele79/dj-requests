@@ -10,6 +10,8 @@ type RequestItem = {
   eventCode: string;
   title: string;
   url: string;
+  dedication: string;
+
   platform: Platform;
   youtubeVideoId: string;
   votes: number;
@@ -337,6 +339,12 @@ async function joinExistingEvent() {
                             <div className="truncate text-base font-extrabold text-zinc-100">
                               {r.title}
                             </div>
+                            {r.dedication && (
+  <div className="mt-1 text-xs text-zinc-400 italic">
+    💬 {r.dedication}
+  </div>
+)}
+
                           </div>
 
                           <div className="flex items-center gap-2">
