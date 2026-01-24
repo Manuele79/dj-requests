@@ -264,13 +264,13 @@ export default function RequestClient({ code }: { code: string }) {
               {/* Incolla link: subito sotto al campo link */}
               <div className="mt-2">
                 <button
-                  type="button"
-                  onClick={pasteFromClipboard}
-                  className="w-full rounded-xl bg-gradient-to-r from-white to-zinc-200 px-3 py-3 text-sm font-extrabold text-zinc-950 hover:opacity-95 shadow-[0_10px_30px_rgba(255,255,255,0.10)]"
-                  title="Legge il link dagli appunti e lo incolla (se possibile)"
-                >
-                  📋 Incolla link
-                </button>
+  type="button"
+  onClick={pasteFromClipboard}
+  className="w-full rounded-xl bg-gradient-to-r from-cyan-400 to-emerald-400 px-3 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_22px_rgba(34,211,238,0.45)] hover:brightness-110 transition"
+>
+  📋 Incolla link
+</button>
+
               </div>
 
               {/* Dedica */}
@@ -305,18 +305,31 @@ export default function RequestClient({ code }: { code: string }) {
             {/* Bottoni piattaforme */}
             <div className="mt-1 space-y-3">
               <div className="flex flex-wrap justify-center gap-2">
-                {PLATFORM_LINKS.map((p) => (
-                  <a
-                    key={p.key}
-                    href={p.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="rounded-full border border-zinc-800/80 bg-gradient-to-r from-zinc-950 to-zinc-900 px-3 py-2 text-xs font-extrabold text-zinc-200 hover:from-zinc-900 hover:to-zinc-800 shadow-[0_10px_25px_rgba(0,0,0,0.25)]"
-                    title={`Apri ${p.label}, poi copia il link della canzone e torna qui`}
-                  >
-                    Apri {p.label}
-                  </a>
-                ))}
+                {PLATFORM_LINKS.map((p) => {
+  const color =
+    p.key === "youtube"
+      ? "bg-red-600 hover:bg-red-500 shadow-[0_0_18px_rgba(239,68,68,0.4)]"
+      : p.key === "spotify"
+      ? "bg-green-500 hover:bg-green-400 shadow-[0_0_18px_rgba(34,197,94,0.4)]"
+      : p.key === "apple"
+      ? "bg-zinc-200 text-black hover:bg-white shadow-[0_0_18px_rgba(255,255,255,0.35)]"
+      : p.key === "amazon"
+      ? "bg-yellow-500 text-black hover:bg-yellow-400 shadow-[0_0_18px_rgba(234,179,8,0.4)]"
+      : "bg-zinc-600";
+
+  return (
+    <a
+      key={p.key}
+      href={p.href}
+      target="_blank"
+      rel="noreferrer"
+      className={`rounded-full px-3 py-2 text-xs font-extrabold transition ${color}`}
+    >
+      Apri {p.label}
+    </a>
+  );
+})}
+
               </div>
 
               <div className="text-center text-xs text-zinc-500">
@@ -341,7 +354,7 @@ export default function RequestClient({ code }: { code: string }) {
           </div>
 
           {sent.length === 0 ? (
-            <p className="mt-3 text-sm text-zinc-400">Nessuna richiesta ancora.</p>
+            <p className="mt-3 text-sm text-zinc-400">Nessuna richiesta</p>
           ) : (
             <ul className="mt-3 space-y-2">
               {sent.slice(0, 10).map((r, i) => (
