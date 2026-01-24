@@ -549,19 +549,7 @@ else p.unMute?.();
                   {currentTitle || "—"}
                 </span>
               </div>
-              {(() => {
-                const cur = playable.find(
-                 (p) => (p._key ?? p.youtubeVideoId) === currentKey
-                );
-
-                 if (!cur?.dedication) return null;
-
-                 return (
-                   <div className="mt-2 rounded-xl border border-white/10 bg-zinc-950/35 px-3 py-2 text-sm text-zinc-200">
-                  💬 <span className="italic">{cur.dedication}</span>
-               </div>
-               );
-             })()}
+              
 
 
 
@@ -622,10 +610,10 @@ else p.unMute?.();
                     {r._kind === "playlist" ? "  📃" : ""}
                   </button>
                   {r.dedication && (
-  <div className="mt-1 text-xs text-zinc-400 italic">
-    💬 {r.dedication}
-  </div>
-)}
+                 <div className="mt-1 text-xs text-zinc-400 italic">
+                  💬 {r.dedication}
+                 </div>
+                 )}
 
 
                   <span className="shrink-0 rounded-full bg-zinc-800 px-3 py-1 text-xs font-semibold text-zinc-200">
@@ -661,10 +649,10 @@ else p.unMute?.();
                         {r.title}
                       </div>
                       {r.dedication && (
-  <div className="mt-1 text-xs text-zinc-400 italic">
-    💬 {r.dedication}
-  </div>
-)}
+                    <div className="mt-1 text-xs text-zinc-400 italic">
+                     💬 {r.dedication}
+                    </div>
+                    )}
 
                       <div className="mt-0.5 truncate text-xs text-zinc-500">
                         🔥 {r.votes}
