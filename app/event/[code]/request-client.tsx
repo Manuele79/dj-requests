@@ -36,6 +36,15 @@ function storageKey(eventCode: string) {
   return `djreq_sent:${String(eventCode || "").toUpperCase()}`;
 }
 
+function platformBtnClass(key: PlatformKey) {
+  const base =
+    "rounded-2xl px-3 py-2 text-xs font-extrabold text-zinc-950 transition shadow-[0_10px_30px_rgba(0,0,0,0.35)] active:scale-[0.99]";
+  if (key === "youtube") return `${base} bg-gradient-to-r from-red-500 to-rose-400`;
+  if (key === "spotify") return `${base} bg-gradient-to-r from-green-500 to-emerald-400`;
+  if (key === "apple") return `${base} bg-gradient-to-r from-zinc-200 to-zinc-100`;
+  return `${base} bg-gradient-to-r from-yellow-400 to-amber-300`;
+}
+
 export default function RequestClient({ code }: { code: string }) {
   const [title, setTitle] = useState("");
   const [link, setLink] = useState("");
@@ -137,7 +146,7 @@ export default function RequestClient({ code }: { code: string }) {
         body: JSON.stringify({
           eventCode: code,
           title: finalTitle,
-          url: url,
+          url,
           dedication: dedication.trim().slice(0, 180),
         }),
       });
@@ -178,7 +187,6 @@ export default function RequestClient({ code }: { code: string }) {
                 strokeWidth="5"
                 strokeLinecap="round"
               />
-
               <rect x="6" y="32" width="10" height="20" rx="4" fill="url(#mvGrad)" />
               <rect x="48" y="32" width="10" height="20" rx="4" fill="url(#mvGrad)" />
 
@@ -193,7 +201,6 @@ export default function RequestClient({ code }: { code: string }) {
               >
                 M
               </text>
-
               <text
                 x="34"
                 y="46"
@@ -208,64 +215,86 @@ export default function RequestClient({ code }: { code: string }) {
             </svg>
           </div>
 
-          <h2 className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-pink-400">
-            DJ Requests
-          </h2>
+          <div className="inline-flex items-center gap-2 rounded-full bg-zinc-900/60 px-4 py-2 text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-pink-400 ring-1 ring-zinc-800 shadow-[0_10px_30px_rgba(0,0,0,0.35)]">
+            🎧 DJ Requests
+          </div>
 
-          <h1 className="mt-4 text-4xl font-extrabold tracking-tight">Invia una canzone</h1>
+          <h1 className="mt-4 text-4xl font-extrabold tracking-tight">
+            Invia una canzone
+          </h1>
 
           <p className="mt-2 text-sm text-zinc-300">
             Evento:
-            <span className="ml-2 rounded-md bg-zinc-800 px-2 py-1 font-mono text-zinc-100">
+            <span className="ml-2 rounded-full bg-zinc-800 px-3 py-1 font-mono text-zinc-100">
               {code}
             </span>
           </p>
         </header>
 
-        <section className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-5 shadow-sm">
+        <section className="rounded-3xl border border-zinc-800 bg-zinc-900/60 p-5 shadow-[0_18px_60px_rgba(0,0,0,0.35)]">
           <div className="space-y-4">
             <div>
-              <label className="text-sm text-zinc-300">Titolo (o incolli un link sotto)</label>
+              <label className="text-sm font-semibold text-zinc-200">
+                Titolo (opzionale)
+              </label>
               <input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Es: Freed from Desire"
-                className="mt-2 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-sm outline-none placeholder:text-zinc-600 focus:border-zinc-600"
+                className="mt-2 w-full rounded-2xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-sm outline-none placeholder:text-zinc-600 focus:border-zinc-600"
               />
             </div>
 
             <div>
-              <label className="text-sm text-zinc-300">Link (YouTube / Spotify / Apple / Amazon…)</label>
+              <label className="text-sm font-semibold text-zinc-200">
+                Link (YouTube / Spotify / Apple / Amazon…)
+              </label>
               <input
                 value={link}
                 onChange={(e) => setLink(e.target.value)}
                 placeholder="Incolla qui il link condiviso"
-                className="mt-2 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-sm outline-none placeholder:text-zinc-600 focus:border-zinc-600"
+                className="mt-2 w-full rounded-2xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-sm outline-none placeholder:text-zinc-600 focus:border-zinc-600"
               />
 
-              {/* Bottone incolla link: subito sotto al campo link */}
-              <div className="mt-2">
-                <button
-                  type="button"
-                  onClick={pasteFromClipboard}
-                  className="w-full rounded-xl bg-white px-3 py-3 text-sm font-semibold text-black hover:bg-zinc-100"
-                  title="Legge il link dagli appunti e lo incolla (se possibile)"
-                >
-                  📋 Incolla link
-                </button>
-              </div>
+              {/* incolla subito sotto */}
+              <button
+                type="button"
+                onClick={pasteFromClipboard}
+                className="mt-2 w-full rounded-2xl bg-white px-4 py-3 text-sm font-extrabold text-black hover:bg-zinc-100 transition shadow-[0_10px_30px_rgba(255,255,255,0.08)]"
+                title="Legge il link dagli appunti e lo incolla (se possibile)"
+              >
+                📋 Incolla link
+              </button>
 
-              {/* Dedica */}
+              {/* dedica */}
               <div className="mt-3">
-                <div className="mb-1 text-sm text-zinc-300">Dedica (opzionale)</div>
+                <div className="mb-1 text-sm font-semibold text-zinc-200">
+                  Dedica (opzionale)
+                </div>
                 <textarea
                   value={dedication}
                   onChange={(e) => setDedication(e.target.value)}
-                  placeholder="Es: Dedica un pensiero!"
+                  placeholder="Es: Per Vale ❤️ spacca tutto!"
                   rows={2}
-                  className="w-full rounded-xl border border-zinc-800 bg-zinc-950/40 px-4 py-3 text-sm text-zinc-100 outline-none placeholder:text-zinc-600 focus:border-zinc-600"
+                  className="w-full rounded-2xl border border-zinc-800 bg-zinc-950/40 px-4 py-3 text-sm text-zinc-100 outline-none placeholder:text-zinc-600 focus:border-zinc-600"
                 />
-                <div className="mt-1 text-xs text-zinc-500">{dedication.length}/180</div>
+                <div className="mt-1 flex items-center justify-between text-xs text-zinc-500">
+                  <span>{dedication.length}/180</span>
+                  {dedication.length > 40 && (
+                    <span className="text-zinc-400">
+                      (se è lunga, va in scorrimento)
+                    </span>
+                  )}
+                </div>
+
+                {dedication.trim() && (
+                  <div className="mt-2 rounded-2xl border border-zinc-800 bg-zinc-950/50 px-4 py-3">
+                    <div className="text-xs text-zinc-500 mb-1">Anteprima dedica</div>
+                    <div className="overflow-x-auto whitespace-nowrap text-sm text-zinc-200 italic">
+                      💬 {dedication.trim()}
+                    </div>
+                  </div>
+                )}
               </div>
 
               <p className="mt-2 text-xs text-zinc-500">
@@ -273,17 +302,21 @@ export default function RequestClient({ code }: { code: string }) {
               </p>
             </div>
 
-            {/* Invia al DJ: sopra ai bottoni piattaforma */}
+            {/* invia sopra bottoni piattaforme */}
             <button
               onClick={addRequest}
               disabled={!canSend || loading}
-              className="w-full rounded-xl bg-gradient-to-r from-emerald-400 to-pink-400 px-4 py-3 text-sm font-semibold text-zinc-950 transition disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full rounded-2xl bg-gradient-to-r from-emerald-400 to-pink-400 px-4 py-4 text-base font-extrabold text-zinc-950 transition disabled:cursor-not-allowed disabled:opacity-50 shadow-[0_18px_60px_rgba(0,0,0,0.35)]"
             >
-              {loading ? "Invio..." : "Invia al DJ"}
+              {loading ? "Invio..." : "🚀 Invia al DJ"}
             </button>
 
-            {/* Bottoni piattaforme: sotto */}
-            <div className="mt-1 space-y-3">
+            {/* bottoni piattaforme */}
+            <div className="pt-1">
+              <div className="mb-2 text-xs text-zinc-500">
+                Apri un’app, copia il link del brano, torna qui.
+              </div>
+
               <div className="flex flex-wrap gap-2">
                 {PLATFORM_LINKS.map((p) => (
                   <a
@@ -291,7 +324,7 @@ export default function RequestClient({ code }: { code: string }) {
                     href={p.href}
                     target="_blank"
                     rel="noreferrer"
-                    className="rounded-xl border border-zinc-800 bg-gradient-to-r from-zinc-950 to-zinc-900 px-3 py-2 text-xs font-semibold text-zinc-200 hover:from-zinc-900 hover:to-zinc-800"
+                    className={platformBtnClass(p.key)}
                     title={`Apri ${p.label}, poi copia il link della canzone e torna qui`}
                   >
                     Apri {p.label}
@@ -299,12 +332,8 @@ export default function RequestClient({ code }: { code: string }) {
                 ))}
               </div>
 
-              <div className="text-xs text-zinc-500">
-                Tip: Apri l’app → scegli brano → Condividi/Copia link → torna qui → (📋 Incolla link).
-              </div>
-
               {!!hint && (
-                <div className="rounded-xl border border-zinc-800 bg-zinc-950/60 px-3 py-2 text-xs text-zinc-200">
+                <div className="mt-3 rounded-2xl border border-zinc-800 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-200">
                   {hint}
                 </div>
               )}
@@ -312,9 +341,11 @@ export default function RequestClient({ code }: { code: string }) {
           </div>
         </section>
 
-        <section className="mt-6 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4">
+        <section className="mt-6 rounded-3xl border border-zinc-800 bg-zinc-900/40 p-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-zinc-100">Richieste inviate (solo questo telefono)</h2>
+            <h2 className="text-sm font-semibold text-zinc-100">
+              Richieste inviate (solo questo telefono)
+            </h2>
             <span className="rounded-full bg-zinc-800 px-2 py-1 text-xs text-zinc-300">
               {sent.length}
             </span>
@@ -327,7 +358,7 @@ export default function RequestClient({ code }: { code: string }) {
               {sent.slice(0, 10).map((r, i) => (
                 <li
                   key={i}
-                  className="rounded-xl border border-zinc-800 bg-zinc-950/60 px-3 py-2 text-sm text-zinc-200"
+                  className="rounded-2xl border border-zinc-800 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-200"
                 >
                   {r}
                 </li>
