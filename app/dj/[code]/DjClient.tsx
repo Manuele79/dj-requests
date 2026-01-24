@@ -361,14 +361,14 @@ async function joinExistingEvent() {
                               {r.title}
                             </div>
                             {r.dedication && (
-  <div className="mt-2 rounded-xl border border-white/10 bg-zinc-950/35 px-3 py-2 text-sm text-zinc-200">
-    <span className="mr-2">💬</span>
-    <span className="italic">{r.dedication}</span>
-  </div>
-)}
+                            <div className="mt-2 rounded-xl border border-white/10 bg-zinc-950/35 px-3 py-2 text-sm text-zinc-200">
+                            <span className="mr-2">💬</span>
+                            <span className="italic">{r.dedication}</span>
+                         </div>
+                        )}
 
 
-                          </div>
+                         </div>
 
                           <div className="flex items-center gap-2">
                             <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs font-extrabold text-zinc-200 shadow-[0_10px_25px_rgba(0,0,0,0.25)]">
