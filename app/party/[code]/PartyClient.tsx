@@ -328,8 +328,7 @@ else p.unMute?.();
         const listId = isPl ? (current?._listId || extractYouTubeListId(current?.url || "")) : "";
 
         playerRef.current = new window.YT.Player(playerContainerId.current, {
-          videoId: isPl ? "" : (current?.youtubeVideoId || ""),
-
+          videoId: !isPl ? (current?.youtubeVideoId || "") : "",
           playerVars: {
             autoplay: 1,
             playsinline: 1,
@@ -549,8 +548,17 @@ else p.unMute?.();
                   {currentTitle || "—"}
                 </span>
               </div>
-              
+              {(() => {
+  const cur = playable.find(
+    (p) => (p._key ?? p.youtubeVideoId) === currentKey
+  );
 
+  return cur?.dedication ? (
+    <div className="mt-1 text-xs text-zinc-400 italic">
+      💬 {cur.dedication}
+    </div>
+  ) : null;
+})()}
 
 
 
@@ -610,10 +618,10 @@ else p.unMute?.();
                     {r._kind === "playlist" ? "  📃" : ""}
                   </button>
                   {r.dedication && (
-                 <div className="mt-1 text-xs text-zinc-400 italic">
-                  💬 {r.dedication}
-                 </div>
-                 )}
+  <div className="mt-1 text-xs text-zinc-400 italic">
+    💬 {r.dedication}
+  </div>
+)}
 
 
                   <span className="shrink-0 rounded-full bg-zinc-800 px-3 py-1 text-xs font-semibold text-zinc-200">
@@ -649,10 +657,10 @@ else p.unMute?.();
                         {r.title}
                       </div>
                       {r.dedication && (
-                    <div className="mt-1 text-xs text-zinc-400 italic">
-                     💬 {r.dedication}
-                    </div>
-                    )}
+  <div className="mt-1 text-xs text-zinc-400 italic">
+    💬 {r.dedication}
+  </div>
+)}
 
                       <div className="mt-0.5 truncate text-xs text-zinc-500">
                         🔥 {r.votes}
