@@ -39,7 +39,6 @@ function storageKey(eventCode: string) {
 export default function RequestClient({ code }: { code: string }) {
   const [title, setTitle] = useState("");
   const [link, setLink] = useState("");
-  const [dedication, setDedication] = useState("");
   const [sent, setSent] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [hint, setHint] = useState("");
@@ -138,7 +137,6 @@ export default function RequestClient({ code }: { code: string }) {
           eventCode: code,
           title: finalTitle,
           url: url,
-          dedication: dedication.trim().slice(0, 180),
         }),
       });
 
@@ -150,7 +148,6 @@ export default function RequestClient({ code }: { code: string }) {
       setSent((prev) => [finalTitle, ...prev].slice(0, 30));
       setTitle("");
       setLink("");
-      setDedication("");
       setHint("✅ Inviata!");
       setTimeout(() => setHint(""), 1400);
     } finally {
@@ -158,55 +155,61 @@ export default function RequestClient({ code }: { code: string }) {
     }
   }
 
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-950 to-zinc-900 text-zinc-100">
       <div className="mx-auto max-w-2xl px-4 py-8">
         <header className="mb-8 text-center">
           <div className="mx-auto mb-3 flex h-20 w-20 items-center justify-center">
-            <svg viewBox="0 0 64 64" className="h-20 w-20">
-              <defs>
-                <linearGradient id="mvGrad" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="#34d399" />
-                  <stop offset="100%" stopColor="#fb7185" />
-                </linearGradient>
-              </defs>
+  <svg viewBox="0 0 64 64" className="h-20 w-20">
+    <defs>
+      <linearGradient id="mvGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stopColor="#34d399" />
+        <stop offset="100%" stopColor="#fb7185" />
+      </linearGradient>
+    </defs>
 
-              <path
-                d="M12 34c0-12 8-22 20-22s20 10 20 22"
-                fill="none"
-                stroke="url(#mvGrad)"
-                strokeWidth="5"
-                strokeLinecap="round"
-              />
+    {/* arco cuffie */}
+    <path
+      d="M12 34c0-12 8-22 20-22s20 10 20 22"
+      fill="none"
+      stroke="url(#mvGrad)"
+      strokeWidth="5"
+      strokeLinecap="round"
+    />
 
-              <rect x="6" y="32" width="10" height="20" rx="4" fill="url(#mvGrad)" />
-              <rect x="48" y="32" width="10" height="20" rx="4" fill="url(#mvGrad)" />
+    {/* pad sinistra */}
+    <rect x="6" y="32" width="10" height="20" rx="4" fill="url(#mvGrad)" />
+    {/* pad destra */}
+    <rect x="48" y="32" width="10" height="20" rx="4" fill="url(#mvGrad)" />
 
-              <text
-                x="32"
-                y="42"
-                textAnchor="middle"
-                fontSize="26"
-                fontWeight="900"
-                fontFamily="Arial, sans-serif"
-                fill="#34d399"
-              >
-                M
-              </text>
+    {/* M */}
+    <text
+      x="32"
+      y="42"
+      textAnchor="middle"
+      fontSize="26"
+      fontWeight="900"
+      fontFamily="Arial, sans-serif"
+      fill="#34d399"
+    >
+      M
+    </text>
 
-              <text
-                x="34"
-                y="46"
-                textAnchor="middle"
-                fontSize="26"
-                fontWeight="900"
-                fontFamily="Arial, sans-serif"
-                fill="#fb7185"
-              >
-                V
-              </text>
-            </svg>
-          </div>
+    {/* V sovrapposta */}
+    <text
+      x="34"
+      y="46"
+      textAnchor="middle"
+      fontSize="26"
+      fontWeight="900"
+      fontFamily="Arial, sans-serif"
+      fill="#fb7185"
+    >
+      V
+    </text>
+  </svg>
+</div>
 
           <h2 className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-pink-400">
             DJ Requests
@@ -243,37 +246,48 @@ export default function RequestClient({ code }: { code: string }) {
                 className="mt-2 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-sm outline-none placeholder:text-zinc-600 focus:border-zinc-600"
               />
 
-              {/* Bottone incolla link: subito sotto al campo link */}
-              <div className="mt-2">
-                <button
-                  type="button"
-                  onClick={pasteFromClipboard}
-                  className="w-full rounded-xl bg-white px-3 py-3 text-sm font-semibold text-black hover:bg-zinc-100"
-                  title="Legge il link dagli appunti e lo incolla (se possibile)"
-                >
-                  📋 Incolla link
-                </button>
-              </div>
-
-              {/* Dedica */}
-              <div className="mt-3">
-                <div className="mb-1 text-sm text-zinc-300">Dedica (opzionale)</div>
-                <textarea
-                  value={dedication}
-                  onChange={(e) => setDedication(e.target.value)}
-                  placeholder="Es: Per Vale ❤️ spacca tutto!"
-                  rows={2}
-                  className="w-full rounded-xl border border-zinc-800 bg-zinc-950/40 px-4 py-3 text-sm text-zinc-100 outline-none placeholder:text-zinc-600 focus:border-zinc-600"
-                />
-                <div className="mt-1 text-xs text-zinc-500">{dedication.length}/180</div>
-              </div>
-
               <p className="mt-2 text-xs text-zinc-500">
                 Party autoplay funziona solo con link YouTube. Gli altri link si aprono dal DJ.
               </p>
+
+              {/* BOTTONI SOTTO */}
+              <div className="mt-3 space-y-3">
+                <div className="flex flex-wrap gap-2">
+                  {PLATFORM_LINKS.map((p) => (
+                    <a
+                      key={p.key}
+                      href={p.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="rounded-xl border border-zinc-800 bg-zinc-950/60 px-3 py-2 text-xs font-semibold text-zinc-200 hover:bg-zinc-900"
+                      title={`Apri ${p.label}, poi copia il link della canzone e torna qui`}
+                    >
+                      Apri {p.label}
+                    </a>
+                  ))}
+
+                  <button
+                    type="button"
+                    onClick={pasteFromClipboard}
+                    className="rounded-xl bg-white px-3 py-2 text-xs font-semibold text-black hover:bg-zinc-100"
+                    title="Legge il link dagli appunti e lo incolla (se possibile)"
+                  >
+                    📋 Incolla link
+                  </button>
+                </div>
+
+                <div className="text-xs text-zinc-500">
+                  Tip: Apri l’app → scegli brano → Condividi/Copia link → torna qui → (📋 Incolla link).
+                </div>
+
+                {!!hint && (
+                  <div className="rounded-xl border border-zinc-800 bg-zinc-950/60 px-3 py-2 text-xs text-zinc-200">
+                    {hint}
+                  </div>
+                )}
+              </div>
             </div>
 
-            {/* Invia al DJ: sopra ai bottoni piattaforma */}
             <button
               onClick={addRequest}
               disabled={!canSend || loading}
@@ -281,34 +295,6 @@ export default function RequestClient({ code }: { code: string }) {
             >
               {loading ? "Invio..." : "Invia al DJ"}
             </button>
-
-            {/* Bottoni piattaforme: sotto */}
-            <div className="mt-1 space-y-3">
-              <div className="flex flex-wrap gap-2">
-                {PLATFORM_LINKS.map((p) => (
-                  <a
-                    key={p.key}
-                    href={p.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="rounded-xl border border-zinc-800 bg-gradient-to-r from-zinc-950 to-zinc-900 px-3 py-2 text-xs font-semibold text-zinc-200 hover:from-zinc-900 hover:to-zinc-800"
-                    title={`Apri ${p.label}, poi copia il link della canzone e torna qui`}
-                  >
-                    Apri {p.label}
-                  </a>
-                ))}
-              </div>
-
-              <div className="text-xs text-zinc-500">
-                Tip: Apri l’app → scegli brano → Condividi/Copia link → torna qui → (📋 Incolla link).
-              </div>
-
-              {!!hint && (
-                <div className="rounded-xl border border-zinc-800 bg-zinc-950/60 px-3 py-2 text-xs text-zinc-200">
-                  {hint}
-                </div>
-              )}
-            </div>
           </div>
         </section>
 
@@ -343,7 +329,7 @@ export default function RequestClient({ code }: { code: string }) {
         </section>
 
         <footer className="mt-8 text-center text-xs text-zinc-500">
-          Nessun audio viene inviato. Solo link, titolo e dedica.
+          Nessun audio viene inviato. Solo link e titolo.
         </footer>
       </div>
     </div>
