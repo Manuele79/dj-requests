@@ -7,8 +7,6 @@ type RequestItem = {
   eventCode: string;
   title: string;
   url: string;
-  dedication: string;
-
   platform: "youtube" | "spotify" | "apple" | "amazon" | "other";
   youtubeVideoId: string;
   votes: number;
@@ -137,8 +135,6 @@ function startedKey(code: string) {
           r.createdAt ?? (r.created_at ? Date.parse(r.created_at) : 0)
         ),
         updatedAt: Number(r.updatedAt ?? r.updated_at ?? 0),
-        dedication: String(r.dedication ?? ""),
-
       }));
 
       setItems(mapped);
@@ -548,19 +544,6 @@ else p.unMute?.();
                   {currentTitle || "—"}
                 </span>
               </div>
-              {(() => {
-  const cur = playable.find(
-    (p) => (p._key ?? p.youtubeVideoId) === currentKey
-  );
-
-  return cur?.dedication ? (
-    <div className="mt-1 text-xs text-zinc-400 italic">
-      💬 {cur.dedication}
-    </div>
-  ) : null;
-})()}
-
-
 
               {!userStarted && (
                 <div className="mb-3 rounded-xl border border-zinc-800 bg-zinc-950/60 p-3 text-sm text-zinc-200">
@@ -617,12 +600,6 @@ else p.unMute?.();
                     {r.title || (r._kind === "playlist" ? "Playlist YouTube" : "—")}
                     {r._kind === "playlist" ? "  📃" : ""}
                   </button>
-                  {r.dedication && (
-  <div className="mt-1 text-xs text-zinc-400 italic">
-    💬 {r.dedication}
-  </div>
-)}
-
 
                   <span className="shrink-0 rounded-full bg-zinc-800 px-3 py-1 text-xs font-semibold text-zinc-200">
                     🔥 {r.votes}
@@ -656,12 +633,6 @@ else p.unMute?.();
                       <div className="truncate font-semibold text-zinc-100">
                         {r.title}
                       </div>
-                      {r.dedication && (
-  <div className="mt-1 text-xs text-zinc-400 italic">
-    💬 {r.dedication}
-  </div>
-)}
-
                       <div className="mt-0.5 truncate text-xs text-zinc-500">
                         🔥 {r.votes}
                       </div>
