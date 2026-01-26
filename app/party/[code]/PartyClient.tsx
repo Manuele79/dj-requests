@@ -7,6 +7,7 @@ type RequestItem = {
   eventCode: string;
   title: string;
   url: string;
+  dedication: string;
   platform: "youtube" | "spotify" | "apple" | "amazon" | "other";
   youtubeVideoId: string;
   votes: number;
@@ -126,6 +127,8 @@ function startedKey(code: string) {
         eventCode: String(r.eventCode ?? r.event_code ?? ""),
         title: String(r.title ?? ""),
         url: String(r.url ?? ""),
+        dedication: String(r.dedication ?? ""),
+
         platform: (r.platform ?? "other") as any,
         youtubeVideoId: normalizeVideoId(
           r.youtubeVideoId ?? r.youtube_video_id ?? ""
