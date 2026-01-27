@@ -214,16 +214,29 @@ async function joinExistingEvent() {
         {/* HEADER TOP */}
         <div className="mb-6 flex flex-col gap-4">
           <div className="flex flex-wrap items-center gap-3">
-            <div className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-extrabold text-zinc-950 bg-gradient-to-r from-emerald-400 to-pink-400 shadow-[0_0_25px_rgba(255,255,255,0.08)]">
-              🎧 DJ Console
+            <div className="flex items-center gap-3">
+              {/* Logo MV */}
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-emerald-400 to-pink-400 shadow-[0_0_20px_rgba(34,211,238,0.35)]">
+                <span className="text-2xl font-black text-zinc-950">MV</span>
+              </div>
+
+              {/* Titolo */}
+              <div>
+                <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-pink-300">
+                  DJ Console
+                </div>
+                <div className="text-xs text-zinc-400">Music Requests</div>
+              </div>
             </div>
 
-            <div className="text-sm text-zinc-300">
-              Evento:{" "}
-              <span className="ml-2 font-mono text-zinc-950 rounded-full bg-gradient-to-r from-zinc-100 to-zinc-200 px-3 py-1 shadow-[0_10px_25px_rgba(0,0,0,0.25)]">
-                {code}
-              </span>
-            </div>
+
+            <div className="text-sm">
+               <span className="text-zinc-400">Evento</span>
+               <span className="ml-2 inline-flex items-center rounded-full px-3 py-1 font-mono text-sm font-bold text-zinc-950 bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-300 shadow-[0_0_18px_rgba(34,211,238,0.25)]">
+                 {code}
+               </span>
+             </div>
+
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
