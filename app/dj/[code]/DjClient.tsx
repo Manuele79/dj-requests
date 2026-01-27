@@ -105,6 +105,16 @@ export default function DjClient({ code }: { code: string }) {
   const [eventName, setEventName] = useState("");
   const [joinCode, setJoinCode] = useState("");
   const [joinMsg, setJoinMsg] = useState("");
+  
+
+  function resetPartyUnlock() {
+    try {
+      localStorage.removeItem(
+        `djreq_party_started:${String(code || "").toUpperCase()}`
+      );
+    } catch {}
+  }
+
 
 
   const sorted = useMemo(() => {
@@ -117,10 +127,10 @@ export default function DjClient({ code }: { code: string }) {
     try {
       const res = await fetch(`/api/requests?eventCode=${encodeURIComponent(code)}`);
       const data = await res.json();
-const next: RequestItem[] = (data.requests || []).map((r: any) => ({
-  ...r,
-  dedication: String(r.dedication ?? ""),
-}));
+      const next: RequestItem[] = (data.requests || []).map((r: any) => ({
+     ...r,
+     dedication: String(r.dedication ?? ""),
+    }));
 
 
       setItems((prev) =>
@@ -270,14 +280,22 @@ async function joinExistingEvent() {
           <div className="flex flex-wrap gap-2">
             <ModeButton
               active={mode === "dj"}
-              onClick={() => setMode("dj")}
+              onClick={() => {
+                resetPartyUnlock();
+                setMode("dj");
+              }}
+
               icon="🎛"
               label="DJ"
               variant="dj"
             />
             <ModeButton
               active={mode === "party"}
-              onClick={() => setMode("party")}
+              onClick={() => {
+                resetPartyUnlock();
+                setMode("party");
+              }}
+
               icon="🎉"
               label="Party"
               variant="party"
