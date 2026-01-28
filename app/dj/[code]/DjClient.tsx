@@ -222,17 +222,17 @@ async function joinExistingEvent() {
 
               {/* Titolo */}
               <div>
-                <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-pink-300">
+                <div className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-300">
                   DJ Console
                 </div>
-                <div className="text-xs text-zinc-400">Music Requests</div>
+                <div className="text-xs text-zinc-300">Music Requests</div>
               </div>
             </div>
 
 
-            <div className="text-sm">
+            <div className="text-sm font-bold text-zinc-300">
                <span className="text-zinc-400">Evento</span>
-               <span className="ml-2 inline-flex items-center rounded-full px-3 py-1 font-mono text-sm font-bold text-zinc-950 bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-300 shadow-[0_0_18px_rgba(34,211,238,0.25)]">
+               <span className="ml-2 inline-flex items-center rounded-full px-4 py-2 font-mono text-base font-extrabold text-zinc-950 bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-300 shadow-[0_0_22px_rgba(34,211,238,0.25)]">
                  {code}
                </span>
              </div>
@@ -261,7 +261,8 @@ async function joinExistingEvent() {
               />
               <button
                 onClick={createEvent}
-                className="rounded-2xl bg-white px-5 py-3 text-sm font-extrabold text-black hover:bg-zinc-100 transition shadow-[0_0_18px_rgba(255,255,255,0.12)]"
+                className="w-full sm:w-auto rounded-2xl bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_26px_rgba(34,211,238,0.18)] hover:brightness-110 transition"
+
               >
                 Crea evento
               </button>
@@ -278,7 +279,8 @@ async function joinExistingEvent() {
             />
             <button
               onClick={joinExistingEvent}
-              className="rounded-2xl bg-zinc-700 px-5 py-3 text-sm font-semibold text-zinc-100 hover:bg-zinc-600"
+              className="w-full sm:w-auto rounded-2xl bg-gradient-to-r from-pink-400 via-rose-300 to-amber-300 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_22px_rgba(251,113,133,0.18)] hover:brightness-110 transition"
+
             >
               Entra
             </button>
