@@ -329,17 +329,18 @@ async function joinExistingEvent() {
           <div className="lg:col-span-2">
             {mode === "party" ? (
               <section className="rounded-3xl border border-zinc-700/80 bg-zinc-900/60 shadow-[0_0_35px_rgba(0,0,0,0.45)]">
-                <div className="mb-2 flex items-center justify-between text-xs text-zinc-400">
-                  <span>Party Mode (autoplay YouTube)</span>
+                <div className="mb-2 flex flex-wrap items-center justify-between gap-2 text-xs text-zinc-400">
+                  <span className="min-w-0 truncate">Party Mode (autoplay YouTube)</span>
                   <a
                     href={`/party/${code}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-zinc-200 hover:underline"
+                    className="whitespace-nowrap text-zinc-200 hover:underline"
                   >
                     Apri fullscreen ↗
                   </a>
-                </div>
+                 </div>
+
 
                 <div className="overflow-hidden rounded-3xl border border-zinc-800 bg-zinc-950">
                   <iframe
@@ -351,11 +352,11 @@ async function joinExistingEvent() {
               </section>
             ) : (
               <section className="rounded-3xl border border-zinc-700/80 bg-zinc-900/60 shadow-[0_0_35px_rgba(0,0,0,0.45)]">
-                <div className="mb-3 flex items-center justify-between">
-                  <div className="text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-pink-400">
+                <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                  <div className="min-w-0 text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-pink-400">
                     Console DJ
                   </div>
-                  <div className="text-xs text-zinc-400">Ordine: voti ▸ attività</div>
+                  <div className="whitespace-nowrap text-xs text-zinc-400">Ordine: voti ▸ attività</div>
                 </div>
 
                 {sorted.length === 0 ? (
@@ -373,7 +374,7 @@ async function joinExistingEvent() {
                     {sorted.map((r, idx) => (
                       <li
                         key={r.id}
-                        className="rounded-3xl border border-zinc-800 bg-zinc-950/55 p-4 shadow-[0_14px_45px_rgba(0,0,0,0.35)]"
+                        className="rounded-3xl overflow-hidden border border-zinc-800 bg-zinc-950/55 p-4 shadow-[0_14px_45px_rgba(0,0,0,0.35)]"
                       >
                         <div className="flex items-start justify-between gap-3">
                           <div className="min-w-0">
@@ -382,7 +383,7 @@ async function joinExistingEvent() {
                               {r.title}
                             </div>
                             {r.dedication && (
-                            <div className="mt-1 text-xs text-zinc-400 italic">
+                            <div className="mt-1 truncate text-xs text-zinc-400 italic">
                              💬 {r.dedication}
                             </div>
                            )}
