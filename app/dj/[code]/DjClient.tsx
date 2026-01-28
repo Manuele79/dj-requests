@@ -86,7 +86,8 @@ function ModeButton({
     <button
       onClick={onClick}
       className={[
-        "rounded-full px-6 py-3 text-sm font-extrabold transition",
+        "rounded-full px-6 py-3 text-sm font-extrabold transition inline-flex items-center justify-center gap-2 min-w-[140px]",
+
         "ring-1",
         active
           ? activeClass
@@ -297,7 +298,7 @@ async function joinExistingEvent() {
 
 
           {/* mode buttons */}
-          <div className="flex flex-wrap gap-2">
+          <div className="flex gap-4 justify-center">
             <ModeButton
               active={mode === "dj"}
               onClick={() => {
