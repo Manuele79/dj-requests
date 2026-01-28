@@ -585,9 +585,13 @@ function resetParty() {
                 </span>
               </div>
                   {currentDedication && (
-                   <div className="mt-2 text-sm sm:text-base text-zinc-200 italic">
-                     💬 {currentDedication}
-                   </div>
+                   <div className="mt-2 text-sm sm:text-base italic">
+                     <span className="text-red-400 font-semibold">💬Dedica:</span>
+                     <span className="ml-2 text-zinc-200">
+                       {currentDedication}
+                     </span>
+                    </div>
+
                  )}
 
                 
