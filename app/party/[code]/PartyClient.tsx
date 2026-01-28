@@ -537,10 +537,10 @@ function resetParty() {
             </button>
 
             <h1 className="mt-4 text-3xl font-semibold tracking-tight">
-              Riproduzione automatica (YouTube)
+              Riproduzione automatica YouTube
             </h1>
             <p className="mt-2 text-sm text-zinc-300">
-              Evento: <span className="font-mono text-zinc-100">{code}</span>
+              Evento: <span className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">{code}</span>
             </p>
           </div>
 
@@ -571,14 +571,14 @@ function resetParty() {
 
         <section className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4">
           {playable.length === 0 ? (
-            <p className="text-sm text-zinc-400">
+            <p className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
               Nessun YouTube in coda. Servono link YouTube (video o playlist).
             </p>
           ) : (
             <>
               <div className="mb-2 text-xs text-zinc-400">{statusMsg}</div>
 
-              <div className="mb-3 text-sm text-zinc-300">
+              <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
                 Ora in riproduzione:
                 <span className="ml-2 font-semibold text-zinc-100">
                   {currentTitle || "—"}
@@ -586,7 +586,7 @@ function resetParty() {
               </div>
                   {currentDedication && (
                    <div className="mt-2 text-sm sm:text-base italic">
-                     <span className="text-red-400 font-semibold">💬Dedica:</span>
+                     <span className="text-red-400 font-semibold">💬 Dedica:</span>
                      <span className="ml-2 text-zinc-200">
                        {currentDedication}
                      </span>
@@ -599,7 +599,7 @@ function resetParty() {
 
              {!userStarted && (
                <div className="mb-3 rounded-2xl border border-zinc-800/80 bg-zinc-950/50 p-4 ring-1 ring-white/5 shadow-[0_18px_60px_rgba(0,0,0,0.35)]">
-                <div className="font-semibold">
+                <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
                  📱 Mobile: 1 tap per sbloccare l’autoplay
                 </div>
                 <div className="mt-1 text-xs text-zinc-400">
@@ -628,7 +628,7 @@ function resetParty() {
 
         <section className="mt-6 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4">
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-zinc-100">Coda (YouTube)</h2>
+            <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Coda (YouTube)</h2>
             <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">
               {playable.length}
             </span>
@@ -668,7 +668,7 @@ function resetParty() {
         {/* --- SPOTIFY QUEUE (solo lista + link) --- */}
         <section className="mt-6 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4">
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-zinc-100">Coda Spotify</h2>
+            <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Coda Spotify</h2>
             <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">
               {spotifyList.length}
             </span>
@@ -685,7 +685,7 @@ function resetParty() {
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0">
-                      <div className="truncate font-semibold text-zinc-100">
+                      <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
                         {r.title}
                       </div>
                       <div className="mt-0.5 truncate text-xs text-zinc-500">
