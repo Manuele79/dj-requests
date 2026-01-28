@@ -351,7 +351,7 @@ async function joinExistingEvent() {
                 </div>
               </section>
             ) : (
-              <section className="rounded-3xl border border-zinc-700/80 bg-zinc-900/60 shadow-[0_0_35px_rgba(0,0,0,0.45)]">
+              <section className="rounded-3xl border border-zinc-800/80 bg-zinc-900/55 shadow-[0_0_35px_rgba(0,0,0,0.45)]">
                 <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                   <div className="min-w-0 text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-pink-400">
                     Console DJ
