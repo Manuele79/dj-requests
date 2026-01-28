@@ -224,9 +224,10 @@ async function joinExistingEvent() {
 
               {/* Titolo */}
               <div>
-                <div className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-300">
-                  DJ Console
+                <div className="text-lg sm:text-xl font-extrabold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-400 drop-shadow-[0_0_12px_rgba(34,211,238,0.25)]">
+                  🎧 DJ CONSOLE
                 </div>
+
                 <div className="text-xs text-zinc-300">Music Requests</div>
               </div>
             </div>
@@ -327,7 +328,7 @@ async function joinExistingEvent() {
           {/* LEFT */}
           <div className="lg:col-span-2">
             {mode === "party" ? (
-              <section className="rounded-3xl border border-zinc-800 bg-zinc-900/40 p-3 shadow-[0_18px_60px_rgba(0,0,0,0.35)]">
+              <section className="rounded-3xl border border-zinc-700/80 bg-zinc-900/60 shadow-[0_0_35px_rgba(0,0,0,0.45)]">
                 <div className="mb-2 flex items-center justify-between text-xs text-zinc-400">
                   <span>Party Mode (autoplay YouTube)</span>
                   <a
@@ -349,7 +350,7 @@ async function joinExistingEvent() {
                 </div>
               </section>
             ) : (
-              <section className="rounded-3xl border border-zinc-800 bg-zinc-900/40 p-4 shadow-[0_18px_60px_rgba(0,0,0,0.35)]">
+              <section className="rounded-3xl border border-zinc-700/80 bg-zinc-900/60 shadow-[0_0_35px_rgba(0,0,0,0.45)]">
                 <div className="mb-3 flex items-center justify-between">
                   <div className="text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-pink-400">
                     Console DJ
