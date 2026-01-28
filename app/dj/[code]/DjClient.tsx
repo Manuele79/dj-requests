@@ -80,7 +80,8 @@ function ModeButton({
   const activeClass =
     variant === "dj"
       ? "bg-gradient-to-r from-emerald-400 to-teal-300 text-zinc-950 ring-emerald-300/40 shadow-[0_0_25px_rgba(52,211,153,0.20)]"
-      : "bg-gradient-to-r from-pink-400 to-rose-300 text-zinc-950 ring-pink-300/40 shadow-[0_0_25px_rgba(251,113,133,0.20)]";
+      : "bg-gradient-to-r from-amber-300 to-orange-400 text-zinc-950 ring-amber-300/40 shadow-[0_0_25px_rgba(251,191,36,0.22)]";
+
 
   return (
     <button
@@ -331,14 +332,14 @@ async function joinExistingEvent() {
             {mode === "party" ? (
               <section className="rounded-3xl border border-zinc-700/80 bg-zinc-900/60 shadow-[0_0_35px_rgba(0,0,0,0.45)]">
                 <div className="mb-2 flex flex-wrap items-center justify-between gap-2 text-xs text-zinc-400">
-                  <span className="min-w-0 truncate">Party Mode (autoplay YouTube)</span>
+                  <span className="min-w-0 truncate">Party Mode:autoplay YouTube</span>
                   <a
                     href={`/party/${code}`}
                     target="_blank"
                     rel="noreferrer"
                     className="whitespace-nowrap text-zinc-200 hover:underline"
                   >
-                    Apri fullscreen ↗
+                    Apri Fullscreen↗
                   </a>
                  </div>
 
