@@ -378,7 +378,7 @@ async function joinExistingEvent() {
                       >
                         <div className="flex items-start justify-between gap-3">
                           <div className="min-w-0">
-                            <div className="hidden text-xs text-zinc-500">#{idx + 1}</div>
+                            <div className="text-xs text-zinc-500">#{idx + 1}</div>
                             <div className="truncate text-base font-extrabold text-zinc-100">
                               {r.title}
                             </div>
@@ -399,7 +399,7 @@ async function joinExistingEvent() {
 
                             <button
                               onClick={() => voteUp(r)}
-                              className="rounded-xl bg-white px-3 py-2 text-xs font-extrabold text-black hover:bg-zinc-100 transition shadow-[0_10px_25px_rgba(0,0,0,0.25)]"
+                              className="hidden rounded-xl bg-white px-3 py-2 text-xs font-extrabold text-black hover:bg-zinc-100 transition shadow-[0_10px_25px_rgba(0,0,0,0.25)]"
                             >
                               +1
                             </button>
