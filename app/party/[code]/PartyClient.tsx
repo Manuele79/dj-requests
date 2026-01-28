@@ -579,15 +579,16 @@ function resetParty() {
                 Ora in riproduzione:
                 <span className="ml-2 font-semibold text-zinc-100">
                   {currentTitle || "—"}
-
+                </span>
+              </div>
                   {currentDedication && (
                    <div className="mt-1 text-xs text-zinc-400 italic">
                      💬 {currentDedication}
                    </div>
                  )}
 
-                </span>
-              </div>
+                
+              
 
              {!userStarted && (
                <div className="mb-3 rounded-2xl border border-zinc-800/80 bg-zinc-950/50 p-4 ring-1 ring-white/5 shadow-[0_18px_60px_rgba(0,0,0,0.35)]">
