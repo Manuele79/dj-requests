@@ -101,6 +101,36 @@ function ModeButton({
   );
 }
 
+function FakeSpectrum() {
+  return (
+    <div className="mt-3 flex items-end gap-1.5 h-7">
+      {Array.from({ length: 18 }).map((_, i) => (
+        <span
+          key={i}
+          className="w-1.5 rounded-full bg-gradient-to-t from-emerald-400 via-cyan-300 to-pink-300 opacity-80 animate-[eq_1.2s_ease-in-out_infinite]"
+          style={{
+            animationDelay: `${i * 70}ms`,
+          }}
+        />
+      ))}
+
+      <style jsx>{`
+        @keyframes eq {
+          0%   { height: 20%; opacity: .55; }
+          25%  { height: 95%; opacity: .95; }
+          50%  { height: 35%; opacity: .65; }
+          75%  { height: 80%; opacity: .9; }
+          100% { height: 20%; opacity: .55; }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+
+
+
+
 export default function DjClient({ code }: { code: string }) {
   const [mode, setMode] = useState<"dj" | "party">("dj");
   const [items, setItems] = useState<RequestItem[]>([]);
@@ -251,6 +281,8 @@ async function joinExistingEvent() {
               <h1 className="text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-pink-400">
                 Richieste Musicali
               </h1>
+              <FakeSpectrum />
+
               <p className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
                 Gestisci la coda e manda il link agli ospiti con il QR.
               </p>
