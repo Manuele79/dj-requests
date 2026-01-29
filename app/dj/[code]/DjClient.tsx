@@ -101,31 +101,30 @@ function ModeButton({
   );
 }
 
-function FakeSpectrum() {
+function FakeSpectrumWide() {
   return (
-    <div className="mt-3 flex items-end gap-1.5 h-7">
-      {Array.from({ length: 18 }).map((_, i) => (
+    <div className="mt-4 flex items-end justify-center gap-2 h-10">
+      {Array.from({ length: 28 }).map((_, i) => (
         <span
           key={i}
-          className="w-1.5 rounded-full bg-gradient-to-t from-emerald-400 via-cyan-300 to-pink-300 opacity-80 animate-[eq_1.2s_ease-in-out_infinite]"
-          style={{
-            animationDelay: `${i * 70}ms`,
-          }}
+          className="w-2 rounded-full bg-gradient-to-t from-amber-400 via-orange-400 to-pink-400 opacity-80 animate-[eqwide_1.4s_ease-in-out_infinite]"
+          style={{ animationDelay: `${i * 60}ms` }}
         />
       ))}
 
       <style jsx>{`
-        @keyframes eq {
-          0%   { height: 20%; opacity: .55; }
-          25%  { height: 95%; opacity: .95; }
-          50%  { height: 35%; opacity: .65; }
-          75%  { height: 80%; opacity: .9; }
-          100% { height: 20%; opacity: .55; }
+        @keyframes eqwide {
+          0%   { height: 20%; opacity: .5; }
+          25%  { height: 100%; opacity: 1; }
+          50%  { height: 40%; opacity: .6; }
+          75%  { height: 90%; opacity: .9; }
+          100% { height: 20%; opacity: .5; }
         }
       `}</style>
     </div>
   );
 }
+
 
 
 
@@ -281,7 +280,9 @@ async function joinExistingEvent() {
               <h1 className="text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-pink-400">
                 Richieste Musicali
               </h1>
-              <FakeSpectrum />
+              <FakeSpectrumWide />
+
+
 
               <p className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
                 Gestisci la coda e manda il link agli ospiti con il QR.
