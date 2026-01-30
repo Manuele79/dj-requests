@@ -325,11 +325,11 @@ async function joinExistingEvent() {
             </button>
           </div>
 
-{joinMsg && (
-  <div className="mt-2 text-sm text-zinc-400">
-    {joinMsg}
-  </div>
-)}
+           {joinMsg && (
+          <div className="mt-2 text-sm text-zinc-400">
+          {joinMsg}
+         </div>
+        )}
 
 
           {/* mode buttons */}
@@ -364,14 +364,14 @@ async function joinExistingEvent() {
           {/* LEFT */}
           <div className="lg:col-span-2">
             {mode === "party" ? (
-              <section className="rounded-3xl border border-zinc-700/80 bg-zinc-900/60 shadow-[0_0_35px_rgba(0,0,0,0.45)]">
+              <section className="rounded-3xl border border-yellow-400 bg-zinc-900/60 shadow-[0_0_35px_rgba(253,224,71,0.35)]">
                 <div className="mb-2 flex flex-wrap items-center justify-between gap-2 text-xs text-zinc-400">
                   <span className="min-w-0 truncate">Party Autoplay YouTube</span>
                   <a
                     href={`/party/${code}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="whitespace-nowrap text-zinc-200 hover:underline"
+                    className="whitespace-nowrap text-cyan-400 hover:underline"
                   >
                     Apri-Fullscreen↗
                   </a>
@@ -387,7 +387,7 @@ async function joinExistingEvent() {
                 </div>
               </section>
             ) : (
-              <section className="rounded-3xl border border-zinc-700/80 bg-zinc-900/60 shadow-[0_0_35px_rgba(0,0,0,0.45)]">
+              <section className="rounded-3xl border-yellow-400/80 bg-emerald-300/40 shadow-[0_0_35px_rgba(0,0,0,0.45)]">
                 <div className="flex flex-wrap items-center justify-between gap-3">
   
                   <div className="min-w-0">
@@ -407,7 +407,7 @@ async function joinExistingEvent() {
 
 
                 {sorted.length === 0 ? (
-                  <div className="rounded-3xl border border-zinc-800 bg-zinc-900/40 p-4 pt-6 text-sm text-zinc-300 shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
+                  <div className="rounded-3xl border border-yellow-400 bg-zinc-900/40 p-4 pt-6 text-sm text-zinc-300 shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
                     <div className="font-semibold text-zinc-100">
                       ⚠️ Evento scaduto o vuoto
                     </div>
@@ -421,7 +421,7 @@ async function joinExistingEvent() {
                     {sorted.map((r, idx) => (
                       <li
                         key={r.id}
-                        className="rounded-3xl overflow-hidden border border-zinc-800 bg-zinc-950/55 p-4 pt-6 shadow-[0_14px_45px_rgba(0,0,0,0.35)]"
+                        className="rounded-3xl overflow-hidden border border-cyan-400 bg-zinc-950/55 p-4 pt-6 shadow-[0_14px_45px_rgba(0,0,0,0.35)]"
                       >
                         <div className="flex items-start justify-between gap-3">
                           <div className="min-w-0">
