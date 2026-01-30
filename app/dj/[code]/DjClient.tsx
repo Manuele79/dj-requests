@@ -365,7 +365,7 @@ async function joinExistingEvent() {
           <div className="lg:col-span-2">
             {mode === "party" ? (
               <section className="rounded-3xl border border-yellow-400 bg-zinc-900/60 shadow-[0_0_35px_rgba(253,224,71,0.35)]">
-                <div className="mb-2 flex flex-wrap items-center justify-between gap-2 px-4 text-xs text-zinc-400">
+                <div className="mb-2 flex flex-wrap items-center justify-between gap-2 px-4 text-xs text-cyan-400">
                   <span className="pl-4 min-w-0 truncate">Party Autoplay YouTube</span>
                   <a
                     href={`/party/${code}`}
