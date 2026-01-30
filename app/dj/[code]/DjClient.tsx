@@ -312,7 +312,7 @@ async function joinExistingEvent() {
             <input
               value={joinCode}
               onChange={(e) => setJoinCode(e.target.value)}
-              placeholder="Scrivi: Codice evento esistente"
+              placeholder="Scrivi: Nome evento esistente"
               className="w-full sm:w-72 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-pink-400/70 focus:ring-2 focus:ring-pink-400/20 transition"
 
             />
