@@ -256,7 +256,7 @@ async function joinExistingEvent() {
 
               {/* Titolo */}
               <div>
-                <div className="text-lg sm:text-x2 font-extrabold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-400 drop-shadow-[0_0_12px_rgba(34,211,238,0.25)]">
+                <div className="text-3x1 sm:text-x2 font-extrabold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-400 drop-shadow-[0_0_12px_rgba(34,211,238,0.25)]">
                   🎧 AskDJ
                 </div>
 
@@ -266,7 +266,7 @@ async function joinExistingEvent() {
 
 
             <div className="text-sm font-bold text-zinc-400">
-               <span className="text-zinc-400">Evento</span>
+               <span className="text-cyan-500">EVENTO:</span>
                <span className="ml-2 inline-flex items-center rounded-full px-4 py-2 font-mono text-base font-extrabold text-zinc-950 bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-300 shadow-[0_0_22px_rgba(34,211,238,0.25)]">
                  {code}
                </span>
@@ -278,7 +278,7 @@ async function joinExistingEvent() {
 
             <div>
               <h1 className="text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-pink-400">
-                Richieste Musicali
+                Richieste Musicali...
               </h1>
               <FakeSpectrumWide />
 
@@ -294,7 +294,7 @@ async function joinExistingEvent() {
               <input
                 value={eventName}
                 onChange={(e) => setEventName(e.target.value)}
-                placeholder="Nome evento"
+                placeholder="Scrivi: Nome evento"
                 className="w-full sm:w-72 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-cyan-400/70 focus:ring-2 focus:ring-cyan-400/20 transition"
 
               />
@@ -303,7 +303,7 @@ async function joinExistingEvent() {
                 className="w-full sm:w-auto rounded-2xl bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_26px_rgba(34,211,238,0.18)] hover:brightness-110 transition"
 
               >
-                Crea evento
+                Crea Evento
               </button>
             </div>
           </div>
@@ -312,7 +312,7 @@ async function joinExistingEvent() {
             <input
               value={joinCode}
               onChange={(e) => setJoinCode(e.target.value)}
-              placeholder="Codice evento esistente"
+              placeholder="Scrivi: Codice evento esistente"
               className="w-full sm:w-72 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-pink-400/70 focus:ring-2 focus:ring-pink-400/20 transition"
 
             />
@@ -366,7 +366,7 @@ async function joinExistingEvent() {
             {mode === "party" ? (
               <section className="rounded-3xl border border-yellow-400 bg-zinc-900/60 shadow-[0_0_35px_rgba(253,224,71,0.35)]">
                 <div className="mb-2 flex flex-wrap items-center justify-between gap-2 px-4 text-xs text-cyan-400">
-                  <span className="pl-4 min-w-0 truncate">Party Autoplay YouTube</span>
+                  <span className="pl-4 min-w-0 truncate">Modalità Party:Autoplay YouTube</span>
                   <a
                     href={`/party/${code}`}
                     target="_blank"
@@ -387,15 +387,15 @@ async function joinExistingEvent() {
                 </div>
               </section>
             ) : (
-              <section className="rounded-3xl border-yellow-400/80 bg-emerald-300/40 shadow-[0_0_35px_rgba(0,0,0,0.45)]">
+              <section className="rounded-3xl border-yellow-400/80 bg-emerald-300/20 shadow-[0_0_35px_rgba(0,0,0,0.45)]">
                 <div className="flex flex-wrap items-center justify-between gap-3">
   
                   <div className="min-w-0">
                     <div className="pl-4 text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
-                      Console DJ
+                      Console DJ:
                     </div>
                     <div className="pl-4 text-xs text-amber-300">
-                      Gestione richieste in tempo reale
+                      Gestione richieste in tempo reale:
                     </div>
                   </div>
 
@@ -409,10 +409,10 @@ async function joinExistingEvent() {
                 {sorted.length === 0 ? (
                   <div className="rounded-3xl border border-yellow-400 bg-zinc-900/40 p-4 pt-6 text-sm text-zinc-300 shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
                     <div className="font-semibold text-zinc-100">
-                      ⚠️ Evento scaduto o vuoto
+                      ⚠️ Evento scaduto o vuoto!
                     </div>
                     <div className="mt-1 text-zinc-400">
-                      Nessun video valido nelle ultime 12 ore. Se l’evento è nuovo,
+                      NESSUN VIDEO RICEVUTO. CREA NUOVO EVENTO.
                       invia una canzone dall’area ospiti.
                     </div>
                   </div>
